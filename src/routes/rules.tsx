@@ -41,7 +41,7 @@ function RulesPage() {
           </div>
           <div>
             <p className="text-muted-foreground">STATE MACHINE</p>
-            <p className="mt-1">NORMAL → <span className="text-sev-medium">SUSPICIOUS</span> (any alert) → <span className="text-sev-critical">INCIDENT_CRITICAL</span> (risk ≥ 70 or critical alert)</p>
+            <p className="mt-1">NORMAL → <span className="text-sev-medium">SUSPICIOUS</span> (any alert) → <span className="text-sev-critical">INCIDENT_CRITICAL</span> (critical alert or ≥ 3 ATT&CK tactics)</p>
           </div>
         </div>
       </Panel>

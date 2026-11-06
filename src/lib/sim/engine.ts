@@ -265,7 +265,7 @@ export function computeRisk(alerts: Alert[]): { risk: number; state: IncidentSta
   const base = alerts.reduce((s, a) => s + SEVERITY_WEIGHT[a.severity], 0);
   const tactics = new Set(alerts.map((a) => a.tactic)).size;
   const risk = Math.min(100, base + (tactics - 1) * 10);
-  const critical = risk >= 70 || alerts.some((a) => a.severity === "critical");
+  const critical = tactics >= 3 || alerts.some((a) => a.severity === "critical");
   return { risk, state: critical ? "INCIDENT_CRITICAL" : "SUSPICIOUS" };
 }
 
