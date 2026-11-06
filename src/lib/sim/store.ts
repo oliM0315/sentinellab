@@ -5,8 +5,8 @@ import { SCENARIOS, noiseEvent, type Draft } from "./scenarios";
 export interface TrainingRun {
   scenarioId: string;
   startedRealTs: number;
-  finishedRealTs?: number;
-  rootCause?: string;
+  finishedRealTs?: number | undefined;
+  rootCause?: string | undefined;
   scope?: string[];
   falsePositives: number;
   fpLog: string[];

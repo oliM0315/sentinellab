@@ -10,19 +10,19 @@ export interface SimEvent {
   realTs: number; // real ms when emitted
   source: EventSource;
   type: string;
-  user?: string;
-  src_ip?: string;
-  dst_ip?: string;
-  asset?: string;
-  port?: number;
-  path?: string;
-  bytes?: number;
+  user?: string | undefined;
+  src_ip?: string | undefined;
+  dst_ip?: string | undefined;
+  asset?: string | undefined;
+  port?: number | undefined;
+  path?: string | undefined;
+  bytes?: number | undefined;
   message: string;
   raw: string;
   status: "OK" | "BLOCKED_BY_POLICY";
-  blockedBy?: string;
+  blockedBy?: string | undefined;
   malicious: boolean;
-  scenarioId?: string;
+  scenarioId?: string | undefined;
   alertIds: string[];
 }
 
@@ -58,7 +58,7 @@ export interface ResponseAction {
   target: string;
   realTs: number;
   ts: number;
-  incidentId?: string;
+  incidentId?: string | undefined;
 }
 
 export type ActionKind =
@@ -73,7 +73,7 @@ export interface Incident {
   title: string;
   state: IncidentState;
   status: "open" | "investigating" | "contained" | "closed";
-  verdict?: "TP" | "FP";
+  verdict?: "TP" | "FP" | undefined;
   users: string[];
   ips: string[];
   assets: string[];
@@ -85,10 +85,10 @@ export interface Incident {
   firstEventRealTs: number;
   lastTs: number;
   createdRealTs: number;
-  ackRealTs?: number;
-  containedRealTs?: number;
+  ackRealTs?: number | undefined;
+  containedRealTs?: number | undefined;
   notes: { realTs: number; text: string }[];
-  scenarioId?: string;
+  scenarioId?: string | undefined;
   malicious: boolean;
 }
 
@@ -300,8 +300,10 @@ export function ingest(state: EngineState, d: Draft, realNow: number): SimEvent 
   const hits = evaluateRules(state, ev);
   // also correlate raw events into existing incidents (enrichment) even w/o alert
   const keys = entityKeys(ev);
-  let inc = findCorrelatedIncident(state, keys, ev.ts);
-  if (inc && hits.length === 0) {
+  let found = findCorrelatedIncident(state, keys, ev.ts);
+  const inc0 = found;
+  if (inc0 && hits.length === 0) {
+    const inc = inc0;
     if (!inc.eventIds.includes(ev.id)) {
       inc.eventIds.push(ev.id);
       inc.lastTs = ev.ts;
@@ -309,8 +311,7 @@ export function ingest(state: EngineState, d: Draft, realNow: number): SimEvent 
     }
   }
   for (const h of hits) {
-    if (!inc) {
-      inc = {
+    const inc: Incident = found ?? (found = {
         id: `INC-${String(state.incidents.length + 1).padStart(3, "0")}`,
         title: h.rule.name,
         state: "SUSPICIOUS",
@@ -329,9 +330,8 @@ export function ingest(state: EngineState, d: Draft, realNow: number): SimEvent 
         notes: [],
         scenarioId: ev.scenarioId,
         malicious: false,
-      };
-      state.incidents.unshift(inc);
-    }
+      });
+    if (!state.incidents.includes(inc)) state.incidents.unshift(inc);
     const alert: Alert = {
       id: `AL-${String(state.alerts.length + 1).padStart(4, "0")}`,
       ruleId: h.rule.id,
@@ -361,7 +361,7 @@ export function ingest(state: EngineState, d: Draft, realNow: number): SimEvent 
     inc.tactics = uniq([...inc.tactics, h.rule.tactic]);
     inc.techniques = uniq([...inc.techniques, h.rule.mitre]);
     inc.lastTs = ev.ts;
-    const { risk, state: st } = computeRisk(state.alerts.filter((a) => a.incidentId === inc!.id));
+    const { risk, state: st } = computeRisk(state.alerts.filter((a) => a.incidentId === inc.id));
     inc.risk = risk;
     inc.state = st;
     if (st === "INCIDENT_CRITICAL" && inc.alertIds.length > 1) inc.title = `Multi-stage attack: ${inc.tactics.join(" → ")}`;
@@ -396,8 +396,8 @@ export function applyAction(state: EngineState, kind: ActionKind, target: string
 
 // ---------------- Scoring ----------------
 export interface ScoreInput {
-  mttdSec?: number;
-  mttrSec?: number;
+  mttdSec?: number | undefined;
+  mttrSec?: number | undefined;
   rootCauseCorrect: boolean;
   scopeSelected: string[];
   scopeTruth: string[];
