@@ -147,16 +147,9 @@ export function blockingPolicy(b: Blocks, e: Pick<SimEvent, "asset" | "src_ip" |
   if (e.asset && b.hosts.includes(e.asset)) return `Host ${e.asset} isolated`;
   if (e.src_ip && b.ips.includes(e.src_ip)) return `IP ${e.src_ip} blocked`;
   if (e.dst_ip && b.ips.includes(e.dst_ip)) return `IP ${e.dst_ip} blocked`;
-  if (e.user && b.users.includes(e.user) && (e.type === "login_success" || e.source_is_session)) return `Sessions/credentials of ${e.user} revoked`;
   if (e.user && b.adminRevoked.includes(e.user) && (e.type === "priv_escalation" || e.type === "role_grant" || e.type === "mass_delete")) return `Admin role revoked for ${e.user}`;
   return undefined;
 }
-// helper flag: any non-login event by a user with terminated sessions is also blocked
-declare module "./engine" {
-  interface _Never {}
-}
-type _E = { source_is_session?: boolean };
-void (0 as unknown as _E);
 
 function isSessionBound(e: Partial<SimEvent>) {
   return !!e.user && e.type !== "login_failed";
