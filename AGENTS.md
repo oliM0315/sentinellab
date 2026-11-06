@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- The SOC simulator runs fully in the browser: pure engine logic lives in `src/lib/sim/engine.ts` (unit-tested), live state in `src/lib/sim/store.ts` (useSyncExternalStore). Why: deterministic, testable training sim with no backend needed.
+- Store `commit()` must clone engine arrays/incidents so selectors see new references; selectors must not return freshly filtered arrays (infinite render loop).
