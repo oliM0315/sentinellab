@@ -36,7 +36,13 @@ const listeners = new Set<() => void>();
 const serverSnapshot = state;
 
 function commit() {
-  state = { ...state, engine: { ...state.engine }, version: state.version + 1 };
+  const e = state.engine;
+  state = {
+    ...state,
+    engine: { ...e, events: [...e.events], alerts: [...e.alerts], actions: [...e.actions], rules: [...e.rules], blocks: { ...e.blocks }, incidents: e.incidents.map((i) => ({ ...i })) },
+    run: state.run ? { ...state.run } : undefined,
+    version: state.version + 1,
+  };
   listeners.forEach((l) => l());
 }
 

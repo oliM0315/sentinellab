@@ -24,7 +24,8 @@ function Workspace() {
   const { id } = Route.useParams();
   const inc = useSim((s) => s.engine.incidents.find((i) => i.id === id));
   const allEvents = useSim((s) => s.engine.events);
-  const alerts = useSim((s) => s.engine.alerts.filter((a) => a.incidentId === id));
+  const allAlerts = useSim((s) => s.engine.alerts);
+  const alerts = allAlerts.filter((a) => a.incidentId === id);
   const acts = useSim((s) => s.engine.actions);
   const [note, setNote] = useState("");
   const [ev, setEv] = useState<SimEvent | null>(null);
