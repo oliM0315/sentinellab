@@ -18,7 +18,7 @@ export interface AppState {
   running: boolean;
   noise: boolean;
   speedMs: number;
-  run?: TrainingRun;
+  run?: TrainingRun | undefined;
   history: (TrainingRun & { total: number })[];
   version: number;
 }

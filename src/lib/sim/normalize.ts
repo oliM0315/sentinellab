@@ -1,15 +1,15 @@
 // Normalizes heterogeneous raw log lines into a common schema.
 export interface Normalized {
-  timestamp?: string;
+  timestamp?: string | undefined;
   source: string;
   event_type: string;
-  username?: string;
-  source_ip?: string;
-  dest_ip?: string;
-  dest_port?: number;
-  asset_id?: string;
-  path?: string;
-  bytes?: number;
+  username?: string | undefined;
+  source_ip?: string | undefined;
+  dest_ip?: string | undefined;
+  dest_port?: number | undefined;
+  asset_id?: string | undefined;
+  path?: string | undefined;
+  bytes?: number | undefined;
   parser: string;
 }
 

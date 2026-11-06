@@ -151,7 +151,7 @@ function Training() {
   );
 }
 
-function Row({ k, v, s }: { k: string; v: string; s?: number }) {
+function Row({ k, v, s }: { k: string; v: string; s?: number | undefined }) {
   return (
     <div className="flex justify-between">
       <dt className="text-muted-foreground">{k}</dt>
