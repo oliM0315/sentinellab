@@ -181,16 +181,19 @@ export function formatRaw(e: Omit<SimEvent, "raw" | "id" | "alertIds" | "status"
 
 const WIN = (min: number) => min * 60_000;
 
+/** Shared infrastructure every user touches; never used as a correlation pivot. */
+export const NON_PIVOT_ASSETS = ["VPN-GW-01"];
+
 function entityKeys(e: Partial<SimEvent>): string[] {
   const k: string[] = [];
   if (e.user) k.push(`user:${e.user}`);
   if (e.src_ip) k.push(`ip:${e.src_ip}`);
-  if (e.asset) k.push(`asset:${e.asset}`);
+  if (e.asset && !NON_PIVOT_ASSETS.includes(e.asset)) k.push(`asset:${e.asset}`);
   return k;
 }
 
 function incidentKeys(i: Incident): string[] {
-  return [...i.users.map((u) => `user:${u}`), ...i.ips.map((x) => `ip:${x}`), ...i.assets.map((a) => `asset:${a}`)];
+  return [...i.users.map((u) => `user:${u}`), ...i.ips.map((x) => `ip:${x}`), ...i.assets.filter((a) => !NON_PIVOT_ASSETS.includes(a)).map((a) => `asset:${a}`)];
 }
 
 interface Hit {
@@ -299,7 +302,7 @@ export function ingest(state: EngineState, d: Draft, realNow: number): SimEvent 
   const keys = entityKeys(ev);
   let inc = findCorrelatedIncident(state, keys, ev.ts);
   if (inc && hits.length === 0) {
-    if (!inc.eventIds.includes(ev.id) && (ev.malicious || inc.malicious === false)) {
+    if (!inc.eventIds.includes(ev.id)) {
       inc.eventIds.push(ev.id);
       inc.lastTs = ev.ts;
       mergeEntities(inc, ev);

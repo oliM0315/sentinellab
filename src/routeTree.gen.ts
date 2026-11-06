@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LogsRouteImport } from './routes/logs'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RulesRouteImport } from './routes/rules'
+import { Route as TrainingRouteImport } from './routes/training'
 import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
+import { Route as IncidentsIdRouteImport } from './routes/incidents.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,9 +27,19 @@ const LogsRoute = LogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrainingRoute = TrainingRouteImport.update({
+  id: '/training',
+  path: '/training',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
@@ -34,38 +47,77 @@ const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
   path: '/incidents/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IncidentsIdRoute = IncidentsIdRouteImport.update({
+  id: '/incidents/$id',
+  path: '/incidents/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/logs': typeof LogsRoute
+  '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/training': typeof TrainingRoute
+  '/incidents/$id': typeof IncidentsIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/logs': typeof LogsRoute
+  '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/training': typeof TrainingRoute
+  '/incidents/$id': typeof IncidentsIdRoute
   '/incidents': typeof IncidentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/logs': typeof LogsRoute
+  '/reports': typeof ReportsRoute
   '/rules': typeof RulesRoute
+  '/training': typeof TrainingRoute
+  '/incidents/$id': typeof IncidentsIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/logs' | '/rules' | '/incidents/'
+  fullPaths:
+    | '/'
+    | '/logs'
+    | '/reports'
+    | '/rules'
+    | '/training'
+    | '/incidents/$id'
+    | '/incidents/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/logs' | '/rules' | '/incidents'
-  id: '__root__' | '/' | '/logs' | '/rules' | '/incidents/'
+  to:
+    | '/'
+    | '/logs'
+    | '/reports'
+    | '/rules'
+    | '/training'
+    | '/incidents/$id'
+    | '/incidents'
+  id:
+    | '__root__'
+    | '/'
+    | '/logs'
+    | '/reports'
+    | '/rules'
+    | '/training'
+    | '/incidents/$id'
+    | '/incidents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LogsRoute: typeof LogsRoute
+  ReportsRoute: typeof ReportsRoute
   RulesRoute: typeof RulesRoute
+  TrainingRoute: typeof TrainingRoute
+  IncidentsIdRoute: typeof IncidentsIdRoute
   IncidentsIndexRoute: typeof IncidentsIndexRoute
 }
 
@@ -85,11 +137,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rules': {
       id: '/rules'
       path: '/rules'
       fullPath: '/rules'
       preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/training': {
+      id: '/training'
+      path: '/training'
+      fullPath: '/training'
+      preLoaderRoute: typeof TrainingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/incidents/': {
@@ -99,13 +165,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IncidentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/incidents/$id': {
+      id: '/incidents/$id'
+      path: '/incidents/$id'
+      fullPath: '/incidents/$id'
+      preLoaderRoute: typeof IncidentsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LogsRoute: LogsRoute,
+  ReportsRoute: ReportsRoute,
   RulesRoute: RulesRoute,
+  TrainingRoute: TrainingRoute,
+  IncidentsIdRoute: IncidentsIdRoute,
   IncidentsIndexRoute: IncidentsIndexRoute,
 }
 export const routeTree = rootRouteImport
