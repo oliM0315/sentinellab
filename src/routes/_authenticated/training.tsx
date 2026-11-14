@@ -9,9 +9,11 @@ import { SCENARIOS } from "@/lib/sim/scenarios";
 import { FP_PENALTY, scoreRun } from "@/lib/sim/engine";
 import { mttd, mttr } from "@/lib/sim/metrics";
 
-export const Route = createFileRoute("/training")({
+export const Route = createFileRoute("/_authenticated/training")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Training & CTF Scenarios — SentinelLab" },
       { name: "description", content: "Guided multi-stage MITRE ATT&CK exercises scored on MTTD, MTTR and accuracy." },
       { property: "og:title", content: "Training & CTF — SentinelLab" },

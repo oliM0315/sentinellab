@@ -7,9 +7,11 @@ import { Panel, PageHeader, fmtDur, fmtTime } from "@/components/soc/ui";
 import { useSim } from "@/lib/sim/store";
 import type { ActionKind, Incident } from "@/lib/sim/engine";
 
-export const Route = createFileRoute("/reports")({
+export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Incident Reporting — SentinelLab" },
       { name: "description", content: "Export structured incident reports with executive summary, timeline and remediation." },
       { property: "og:title", content: "Incident Reports — SentinelLab" },

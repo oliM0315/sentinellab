@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -15,6 +16,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { actions, startTicker, useSim } from "@/lib/sim/store";
+import { AccountProvider, useAccount } from "@/components/account-provider";
+import { AccountSignOut } from "@/components/account-sign-out";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   return (
@@ -102,7 +106,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 const NAV = [
-  { to: "/", label: "SOC Dashboard", icon: LayoutDashboard },
+  { to: "/dashboard", label: "SOC Dashboard", icon: LayoutDashboard },
   { to: "/logs", label: "Log Analysis", icon: ScrollText },
   { to: "/rules", label: "Detection Rules", icon: SlidersHorizontal },
   { to: "/incidents", label: "Investigations", icon: ShieldAlert },
@@ -112,13 +116,23 @@ const NAV = [
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  return <QueryClientProvider client={queryClient}><AccountProvider><AppLayout /><Toaster /></AccountProvider></QueryClientProvider>;
+}
+
+function AppLayout() {
+  const path = useLocation({ select: (location) => location.pathname });
+  const { account } = useAccount();
+  if (path === "/" || path === "/auth" || path === "/reset-password") return <Outlet />;
+  return <SocLayout account={account} />;
+}
+
+function SocLayout({ account }: { account: ReturnType<typeof useAccount>["account"] }) {
   useEffect(() => startTicker(), []);
   const running = useSim((s) => s.running);
   const critical = useSim((s) => s.engine.incidents.filter((i) => i.state === "INCIDENT_CRITICAL" && i.status !== "closed").length);
   const clock = useSim((s) => s.engine.simClock);
 
   return (
-    <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen">
         <aside className="no-print sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
           <div className="border-b border-sidebar-border px-5 py-5">
@@ -133,7 +147,7 @@ function RootComponent() {
               <Link
                 key={n.to}
                 to={n.to}
-                activeOptions={{ exact: n.to === "/" }}
+                activeOptions={{ exact: n.to === "/dashboard" }}
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
                 activeProps={{ className: "bg-sidebar-accent text-foreground border-l-2 border-primary" }}
               >
@@ -146,6 +160,9 @@ function RootComponent() {
             ))}
           </nav>
           <div className="space-y-2 border-t border-sidebar-border p-4 font-mono text-[11px] text-muted-foreground">
+            {account?.isAdmin && <Button asChild variant="outline" size="sm" className="w-full"><Link to="/admin">Account approvals</Link></Button>}
+            <Button asChild variant="ghost" size="sm" className="w-full"><Link to="/account">{account?.profile.display_name || "Your profile"}</Link></Button>
+            <AccountSignOut />
             <div className="flex items-center justify-between">
               <span>SIM CLOCK</span>
               <span className="text-foreground">{new Date(clock).toISOString().slice(11, 19)}Z</span>
@@ -160,7 +177,5 @@ function RootComponent() {
           <Outlet />
         </main>
       </div>
-      <Toaster />
-    </QueryClientProvider>
   );
 }

@@ -8,9 +8,11 @@ import { ResponsePanel } from "@/components/soc/ResponsePanel";
 import { actions, useSim } from "@/lib/sim/store";
 import type { SimEvent } from "@/lib/sim/engine";
 
-export const Route = createFileRoute("/incidents/$id")({
+export const Route = createFileRoute("/_authenticated/incidents/$id")({
   head: ({ params }) => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: `${params.id} Investigation — SentinelLab` },
       { name: "description", content: "Incident timeline, evidence, analyst notes and response controls." },
       { property: "og:title", content: `${params.id} — SentinelLab` },

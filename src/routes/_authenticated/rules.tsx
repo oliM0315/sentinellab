@@ -5,9 +5,11 @@ import { Panel, PageHeader, SevBadge } from "@/components/soc/ui";
 import { actions, useSim } from "@/lib/sim/store";
 import type { Severity } from "@/lib/sim/engine";
 
-export const Route = createFileRoute("/rules")({
+export const Route = createFileRoute("/_authenticated/rules")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Detection Rules Manager — SentinelLab" },
       { name: "description", content: "Configure detection thresholds, severity, time windows and correlation settings." },
       { property: "og:title", content: "Detection Rules — SentinelLab" },

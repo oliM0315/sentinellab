@@ -33,3 +33,6 @@ use the editor.
 
 - The SOC simulator runs fully in the browser: pure engine logic lives in `src/lib/sim/engine.ts` (unit-tested), live state in `src/lib/sim/store.ts` (useSyncExternalStore). Why: deterministic, testable training sim with no backend needed.
 - Store `commit()` must clone engine arrays/incidents so selectors see new references; selectors must not return freshly filtered arrays (infinite render loop).
+- Account identity and approval live in Cloud, while simulator data stays browser-only; the authenticated layout requires an approved account before rendering any simulator page.
+- Keep roles separate from profiles and validate admin privileges in every account-management server function; profile names never grant permissions.
+- A single root account provider owns identity-transition subscriptions, and sign-out cancels and clears queries plus resets simulator state to prevent cross-account leakage.

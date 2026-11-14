@@ -8,9 +8,11 @@ import { useSim } from "@/lib/sim/store";
 import { normalizeLine } from "@/lib/sim/normalize";
 import type { SimEvent } from "@/lib/sim/engine";
 
-export const Route = createFileRoute("/logs")({
+export const Route = createFileRoute("/_authenticated/logs")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Log Analysis & Normalization — SentinelLab" },
       { name: "description", content: "Search, filter and normalize raw security logs into a common event schema." },
       { property: "og:title", content: "Log Analysis — SentinelLab" },

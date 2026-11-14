@@ -2,9 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, StateBadge, fmtDur } from "@/components/soc/ui";
 import { useSim } from "@/lib/sim/store";
 
-export const Route = createFileRoute("/incidents/")({
+export const Route = createFileRoute("/_authenticated/incidents/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Incident Queue — SentinelLab" },
       { name: "description", content: "Correlated incidents awaiting triage, investigation and response." },
       { property: "og:title", content: "Incident Queue — SentinelLab" },
