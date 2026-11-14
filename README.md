@@ -1,4 +1,10 @@
 # Sentinellab
+#Group members 
+Olifen Mulatu.......CTC-1456-26 
+Yobsan Fufa.........CTC-129-26 
+Rebira Fufa.........CTC-1672-26 
+Bona Tesfa..........CTC-441-26 
+Rebbira Gizachew....CTC-790-26
 
 Build SentinelLab: Cyber Attack Detection & Incident Response Simulator, an interactive blue team SOC training and incident response platform based on the attached project specification and incorporating these four key refinements:
 
