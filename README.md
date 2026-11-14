@@ -29,13 +29,12 @@ Core Platform Modules:
 - Training & CTF Scenarios: interactive guided exercises with scoring metrics
 - Incident Reporting: structured report export with executive summary, timeline, and remediation recommendations
 
-This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://sentinellab.lovable.app
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/a7c99149-6717-40fd-90cb-880dc3384918).
+
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
